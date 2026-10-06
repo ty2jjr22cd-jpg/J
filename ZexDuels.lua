@@ -6769,7 +6769,7 @@ local function buildGui()
         if printedMarkDirty then printedMarkDirty() end
     end)
 
-    -- Intro
+-- Intro
     local inRow = createRow(32)
     addRowLabel(inRow, "Intro")
     local inBg, inDot = createToggle(inRow)
@@ -6781,7 +6781,6 @@ local function buildGui()
     inClick.ZIndex = 6
     inClick.Activated:Connect(function()
         _introEnabled = not _introEnabled
-        if not _introEnabled and stopIntroPlayback then stopIntroPlayback() end
         applyToggleVisual(inBg, inDot, _introEnabled)
         if printedMarkDirty then printedMarkDirty() end
     end)
@@ -6810,49 +6809,8 @@ local function buildGui()
     riBtn.AutoButtonColor = false
     Instance.new("UICorner", riBtn).CornerRadius = UDim.new(0, 8)
     riBtn.Activated:Connect(function()
-        if type(playIntroSequence) == "function" then pcall(playIntroSequence) end
-    end)
-
-    -- Intro Track
-    local itRow = createRow(40)
-    local itLabel = Instance.new("TextLabel", itRow)
-    itLabel.Size = UDim2.new(0.42, 0, 1, 0)
-    itLabel.Position = UDim2.new(0, 10, 0, 0)
-    itLabel.BackgroundTransparency = 1
-    itLabel.Text = "Intro Track"
-    itLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
-    itLabel.Font = Enum.Font.GothamBold
-    itLabel.TextSize = 13
-    itLabel.TextXAlignment = Enum.TextXAlignment.Left
-    local itBtn = Instance.new("TextButton", itRow)
-    itBtn.Size = UDim2.new(0, 150, 0, 28)
-    itBtn.Position = UDim2.new(1, -160, 0.5, -14)
-    itBtn.BackgroundColor3 = Color3.fromRGB(28, 32, 48)
-    itBtn.BorderSizePixel = 0
-    itBtn.TextColor3 = Color3.fromRGB(170, 200, 255)
-    itBtn.Font = Enum.Font.GothamBold
-    itBtn.TextSize = 12
-    itBtn.ZIndex = 7
-    itBtn.AutoButtonColor = false
-    Instance.new("UICorner", itBtn).CornerRadius = UDim.new(0, 8)
-    local itStroke = Instance.new("UIStroke", itBtn)
-    itStroke.Color = Color3.fromRGB(90, 130, 200)
-    itStroke.Thickness = 1
-    itBtn.Text = string.format("Track %d / %d", selectedIntroMusic, #INTRO_MUSIC_LINKS)
-    itBtn.Activated:Connect(function()
-        local n = #INTRO_MUSIC_LINKS
-        selectedIntroMusic = (tonumber(selectedIntroMusic) or 1) % n + 1
-        itBtn.Text = string.format("Track %d / %d", selectedIntroMusic, n)
-        if printedMarkDirty then printedMarkDirty() end
-        task.spawn(function()
-            pcall(function()
-                if type(previewIntroMusic) == "function" then previewIntroMusic(selectedIntroMusic)
-                elseif type(createIntroSound) == "function" then
-                    if stopIntroPreview then stopIntroPreview() end
-                    createIntroSound(selectedIntroMusic)
-                end
-            end)
-        end)
+        -- Senin intro'nu çalıştır (yukarıda tanımladığımız)
+        if type(_G.ZexPlayIntro) == "function" then pcall(_G.ZexPlayIntro) end
     end)
 
     -- Anti Lag
