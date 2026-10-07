@@ -16,7 +16,6 @@ local _gethui = gethui or function()
     return (ok and res) or Players.LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- Delta uyumlu httpRequest
 local httpRequest = function(opts)
     local url = opts and opts.Url or opts
     if type(url) ~= "string" then return nil end
@@ -56,7 +55,6 @@ local function playIntro()
         ["ZexIntrosong.mp3"] = "https://files.catbox.moe/iyw1cb.mp3",
     }
 
-    -- Resimleri indir (sadece eksikse)
     for fileName, url in pairs(files) do
         if not isfile(fileName) then
             pcall(function()
@@ -68,7 +66,6 @@ local function playIntro()
         end
     end
 
-    -- Asset ID'lerini topla
     local frameList = {}
     for i = 1, 20 do
         local ok, asset = pcall(getasset, "ZexIntro" .. i .. ".jpg")
@@ -77,7 +74,7 @@ local function playIntro()
         end
     end
 
-    if #frameList == 0 then return false end
+    if #frameList == 0 then return end
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "ZexIntro"
@@ -105,7 +102,7 @@ local function playIntro()
     textLabel.Size = UDim2.new(1, 0, 0.08, 0)
     textLabel.Position = UDim2.new(0, 0, 0.88, 0)
     textLabel.BackgroundTransparency = 1
-    textLabel.Text = "ZexHub Loading ⏳"
+    textLabel.Text = "ZexHub Loading"
     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     textLabel.TextStrokeTransparency = 0.2
     textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -123,7 +120,6 @@ local function playIntro()
         sound:Play()
     end)
 
-    -- 9 saniye boyunca 20 resmi döndür
     local startTime = tick()
     local duration = 9
     local frameDelay = 0.07
@@ -136,7 +132,6 @@ local function playIntro()
         end
     end
 
-    -- Fade out
     local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     TweenService:Create(frame, fadeInfo, {BackgroundTransparency = 1}):Play()
     TweenService:Create(imageLabel, fadeInfo, {ImageTransparency = 1}):Play()
@@ -152,17 +147,12 @@ local function playIntro()
         sound:Destroy()
     end
     gui:Destroy()
-    return true
 end
 
--- İntro'yu çalıştır
 pcall(playIntro)
 
--- İntro bitti → ZexDuels.lua'yı yükle
 task.wait(0.3)
 
 pcall(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ty2jjr22cd-jpg/J/refs/heads/main/ZexDuels.lua"))()
 end)
-
-print("ZexDuels Loading...")
