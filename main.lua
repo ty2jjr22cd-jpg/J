@@ -84,7 +84,7 @@ local function playIntro()
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
     gui.DisplayOrder = 99999
-    fade gui.Parent = _gethui()
+    gui.Parent = _gethui()
 
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(1, 0, 1, 0)
@@ -93,17 +93,17 @@ local function playIntro()
     frame.ClipsDescendants = true
     frame.Parent = gui
 
-   Info local imageLabel = Instance.new("ImageLabel")
+    local imageLabel = Instance.new("ImageLabel")
     imageLabel.Size = UDim2.new(1, 0, 1, 0)
-    imageLabel.Position, = UDim2.new(0.5, 0, 0.5, 0)
-    imageLabel.AnchorPoint = Vector2.new(0.5, { 0.5)
+    imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
     imageLabel.BackgroundTransparency = 1
     imageLabel.ScaleType = Enum.ScaleType.Crop
-    imageLabel.PTextarent = frame
+    imageLabel.Parent = frame
 
     local textLabel = Instance.new("TextLabel")
     textLabel.Size = UDim2.new(1, 0, 0.08, 0)
-Trans    textLabel.Position = UDim2.new(0, 0, 0.88, 0)
+    textLabel.Position = UDim2.new(0, 0, 0.88, 0)
     textLabel.BackgroundTransparency = 1
     textLabel.Text = "ZexHub Loading ⏳"
     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -140,7 +140,7 @@ Trans    textLabel.Position = UDim2.new(0, 0, 0.88, 0)
     local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     TweenService:Create(frame, fadeInfo, {BackgroundTransparency = 1}):Play()
     TweenService:Create(imageLabel, fadeInfo, {ImageTransparency = 1}):Play()
-    TweenService:Create(textLabel,parency = 1, TextStrokeTransparency = 1}):Play()
+    TweenService:Create(textLabel, fadeInfo, {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
     if sound then
         TweenService:Create(sound, fadeInfo, {Volume = 0}):Play()
     end
@@ -156,7 +156,7 @@ Trans    textLabel.Position = UDim2.new(0, 0, 0.88, 0)
 end
 
 -- İntro'yu çalıştır
-playIntro()
+pcall(playIntro)
 
 -- İntro bitti → ZexDuels.lua'yı yükle
 task.wait(0.3)
