@@ -1,3 +1,5 @@
+
+
 --══════════════════════════════════════════════════════════════════════
 --  ZEXHUB — Mobile / Delta Executor Build
 --  Discord: .gg/Z2AxF4yZY
@@ -8,6 +10,162 @@
 --  Yüklenmeden önce tüm Printed/deobf/leaked izlerini temizler,
 --  çalışma sırasında da tüm print/GUI metinlerini ZexHub yapar.
 -- ============================================================
+
+--══════════════════════════════════════════════════════════════════════
+--  ZEXHUB INTRO — Script başlar, 9 saniye bekler, sonra devam eder
+--══════════════════════════════════════════════════════════════════════
+repeat task.wait() until game:IsLoaded()
+
+do
+    local Players       = game:GetService("Players")
+    local CoreGui       = game:GetService("CoreGui")
+    local TweenService  = game:GetService("TweenService")
+    local SoundService  = game:GetService("SoundService")
+
+    local getasset = getcustomasset or getsynasset or get_custom_asset
+    if getasset then
+        local _gethui = gethui or function()
+            local ok, res = pcall(function() return CoreGui end)
+            return (ok and res) or Players.LocalPlayer:WaitForChild("PlayerGui")
+        end
+
+        -- Delta uyumlu httpRequest
+        local httpRequest = function(opts)
+            local url = opts and opts.Url or opts
+            if type(url) ~= "string" then return nil end
+            local body
+            pcall(function() body = game:HttpGet(url) end)
+            if body and #body > 0 then
+                return { Body = body, StatusCode = 200 }
+            end
+            return nil
+        end
+
+        if writefile and isfile then
+            local files = {
+                ["ZexIntro1.jpg"]  = "https://files.catbox.moe/fyob6a.jpg",
+                ["ZexIntro2.jpg"]  = "https://files.catbox.moe/ecs00c.jpg",
+                ["ZexIntro3.jpg"]  = "https://files.catbox.moe/1v02ga.jpg",
+                ["ZexIntro4.jpg"]  = "https://files.catbox.moe/av9qjb.jpg",
+                ["ZexIntro5.jpg"]  = "https://files.catbox.moe/3l0smn.jpg",
+                ["ZexIntro6.jpg"]  = "https://files.catbox.moe/kgevzc.jpg",
+                ["ZexIntro7.jpg"]  = "https://files.catbox.moe/8ng39r.jpg",
+                ["ZexIntro8.jpg"]  = "https://files.catbox.moe/0kfnn1.jpg",
+                ["ZexIntro9.jpg"]  = "https://files.catbox.moe/rygwi3.jpg",
+                ["ZexIntro10.jpg"] = "https://files.catbox.moe/va1kb7.jpg",
+                ["ZexIntro11.jpg"] = "https://files.catbox.moe/5bjn3c.jpg",
+                ["ZexIntro12.jpg"] = "https://files.catbox.moe/niqg2p.jpg",
+                ["ZexIntro13.jpg"] = "https://files.catbox.moe/nn1o2z.jpg",
+                ["ZexIntro14.jpg"] = "https://files.catbox.moe/dic7k1.jpg",
+                ["ZexIntro15.jpg"] = "https://files.catbox.moe/6faip5.jpg",
+                ["ZexIntro16.jpg"] = "https://files.catbox.moe/u6iaai.jpg",
+                ["ZexIntro17.jpg"] = "https://files.catbox.moe/vkgrxk.jpg",
+                ["ZexIntro18.jpg"] = "https://files.catbox.moe/7ray53.jpg",
+                ["ZexIntro19.jpg"] = "https://files.catbox.moe/fpq16t.jpg",
+                ["ZexIntro20.jpg"] = "https://files.catbox.moe/1rsiln.jpg",
+                ["ZexIntrosong.mp3"] = "https://files.catbox.moe/iyw1cb.mp3",
+            }
+
+            for fileName, url in pairs(files) do
+                if not isfile(fileName) then
+                    pcall(function()
+                        local res = httpRequest({ Url = url, Method = "GET" })
+                        if res and res.Body then
+                            writefile(fileName, res.Body)
+                        end
+                    end)
+                end
+            end
+
+            local frameList = {}
+            for i = 1, 20 do
+                local ok, asset = pcall(getasset, "ZexIntro" .. i .. ".jpg")
+                if ok and asset then
+                    table.insert(frameList, asset)
+                end
+            end
+
+            if #frameList > 0 then
+                local gui = Instance.new("ScreenGui")
+                gui.Name = "ZexIntro"
+                gui.ResetOnSpawn = false
+                gui.IgnoreGuiInset = true
+                gui.DisplayOrder = 99999
+                gui.Parent = _gethui()
+
+                local frame = Instance.new("Frame")
+                frame.Size = UDim2.new(1, 0, 1, 0)
+                frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                frame.BorderSizePixel = 0
+                frame.ClipsDescendants = true
+                frame.Parent = gui
+
+                local imageLabel = Instance.new("ImageLabel")
+               do imageLabel.Size = UDim2.new(1, 0, 1, 0)
+                imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+                imageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+                imageLabel.BackgroundTransparency = 1
+                imageLabel.ScaleType =
+ Enum.ScaleType.Crop
+                imageLabel.Parent = frame
+
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Size = UDim2.new(   1, 0, 0.08, 0)
+                textLabel.Position = UDim2.new(0, 0, 0.88, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.Text = "ZexHub Loading ⏳"
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, local 255)
+                textLabel.TextStrokeTransparency = 0.2
+                textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                textLabel.TextScaled = true
+                textLabel.Font = Enum.Font.GothamBlack
+                textLabel.ZIndex = 3
+                textLabel.Parent = frame
+
+                local sound
+                pcall(function()
+                    sound = Instance.new("Sound")
+                    sound.SoundId = getasset("ZexIntrosong.mp3")
+                    sound.Volume = 1
+                    sound.Parent = SoundService
+                    sound:Play()
+                end)
+
+                local startTime = tick()
+                local duration = 9
+                local frameDelay = 0.07
+
+                while tick() - startTime < duration do
+                    for _, assetUri in ipairs(frameList) do
+                        if tick() - startTime >= duration then break end
+                        imageLabel.Image = assetUri
+                        task.wait(frameDelay)
+                    end
+                end
+
+                local fadeInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                TweenService:Create(frame, fadeInfo, {BackgroundTransparency = 1}):Play()
+                TweenService:Create(imageLabel, fadeInfo, {ImageTransparency = 1}):Play()
+                TweenService:Create(textLabel, fadeInfo, {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
+                if sound then
+                    TweenService:Create(sound, fadeInfo, {Volume = 0}):Play()
+                end
+
+                task.wait(1.2)
+
+                if sound then
+                    pcall(function() sound:Stop() end)
+                    sound:Destroy()
+                end
+                gui:Destroy()
+            end
+        end
+    end
+end
+--══════════════════════════════════════════════════════════════════════
+--  INTRO BİTTİ — Script devam ediyor (GUI yüklenecek)
+--══════════════════════════════════════════════════════════════════════
+
 _G.ZEXHUB_BRANDING = true
 
 do
@@ -846,31 +1004,6 @@ function printedSavePositionsNow()
     pcall(printedSaveConfig)
 end
 _G.PrintedSavePositionsNow = printedSavePositionsNow
-
-
--- Intro
-INTRO_MUSIC_LINKS = {
-    "https://litter.catbox.moe/un88ni.mp3",
-    "https://litter.catbox.moe/cnscqt.mp3",
-    "https://litter.catbox.moe/yl5qct.mp3",
-    "https://litter.catbox.moe/gmy92t.mp3",
-    "https://litter.catbox.moe/61rdbi.mp3",
-    "https://litter.catbox.moe/2pk71b.mp3",
-    "https://litter.catbox.moe/kmszgk.mp3",
-    "https://litter.catbox.moe/2kck1d.mp3",
-    "https://litter.catbox.moe/lga6r5.mp3",
-    "https://litter.catbox.moe/d4vv6y.mp3",
-}
-INTRO_MUSIC_DURATION = 15
-_currentIntroSound = nil
-_introAssetCache = {}
-stopIntroPreview = nil
-stopIntroPlayback = nil
-createIntroSound = nil
-previewIntroMusic = nil
-playIntroSequence = nil
-getIntroAsset = nil
-_safeNotify = nil
 
 -- Misc state
 local tbl20 = {
@@ -4575,214 +4708,6 @@ function getIntroMusicName(idx)
     return n
 end
 
-stopIntroPreview = function()
-    local s = _currentIntroSound
-    _currentIntroSound = nil
-    if s then
-        pcall(function() s:Stop() end)
-        pcall(function() s.Volume = 0 end)
-        pcall(function() s:Destroy() end)
-    end
-    pcall(function()
-        local pg = localPlayer:FindFirstChild("PlayerGui")
-        if pg then
-            local m = pg:FindFirstChild("PrintedIntroMusic")
-            if m then pcall(function() m:Destroy() end) end
-        end
-    end)
-end
-
-stopIntroPlayback = function()
-    stopIntroPreview()
-    pcall(function()
-        local pg = localPlayer:FindFirstChild("PlayerGui")
-        if pg then
-            local intro = pg:FindFirstChild("PrintedIntro")
-            if intro then intro:Destroy() end
-        end
-        if gethui then
-            local h = gethui()
-            local intro = h and h:FindFirstChild("PrintedIntro")
-            if intro then intro:Destroy() end
-        end
-    end)
-end
-_G.PrintedStopIntroMusic = stopIntroPlayback
-
-_safeNotify = function(msg)
-    if _G.PrintedSafeModeNotify then pcall(_G.PrintedSafeModeNotify, msg) end
-end
-
-local function createIntroSound(url)
-    local u = url or (INTRO_MUSIC_LINKS and INTRO_MUSIC_LINKS[selectedIntroMusic or 1])
-    if not u then return nil end
-    local writef = writefile or (syn and syn.writefile)
-    local getcustom = getcustomasset or getsynasset or (syn and syn.getcustomasset)
-    local req = syn and syn.request or http and http.request or fluxus and fluxus.request or request or http_request
-    local pg = localPlayer:FindFirstChild("PlayerGui") or localPlayer:WaitForChild("PlayerGui", 5)
-    if not pg then return nil end
-    pcall(function()
-        local m = pg:FindFirstChild("PrintedIntroMusic")
-        if m then m:Destroy() end
-    end)
-    local s = Instance.new("Sound")
-    s.Name = "PrintedIntroMusic"
-    s.Volume = 3
-    s.Parent = pg
-    s.Looped = false
-    s.PlayOnRemove = false
-    _currentIntroSound = s
-    local idx = tonumber(selectedIntroMusic) or 1
-    task.spawn(function()
-        local exts = { tostring(u):match("%.([%w]+)$") or "mp3", "mp3", "ogg", "wav" }
-        local soundId = nil
-        if type(req) == "function" and type(getcustom) == "function" and type(writef) == "function" then
-            local ok, res = pcall(req, { Url = u, Method = "GET" })
-            local body = ok and res and (res.Body or res.body)
-            if type(body) == "string" and #body > 0 then
-                for _, ext in ipairs(exts) do
-                    local path = "printed_intro_" .. tostring(idx) .. "." .. ext
-                    if pcall(writef, path, body) then
-                        local ok2, id = pcall(getcustom, path)
-                        if ok2 and type(id) == "string" and #id > 0 then soundId = id break end
-                    end
-                end
-            end
-        end
-        if not soundId and type(getcustom) == "function" and type(writef) == "function" then
-            local ok, res = pcall(function() return game:HttpGet(u) end)
-            if ok and type(res) == "string" and #res > 500 then
-                for _, ext in ipairs(exts) do
-                    local path = "printed_intro_" .. tostring(idx) .. "." .. ext
-                    if pcall(writef, path, res) then
-                        local ok2, id = pcall(getcustom, path)
-                        if ok2 and type(id) == "string" and #id > 0 then soundId = id break end
-                    end
-                end
-            end
-        end
-        if not s.Parent then return end
-        if not soundId then
-            warn("[Printed] Intro audio could not be converted to a local asset: " .. tostring(u))
-            return
-        end
-        s.SoundId = soundId
-        pcall(function() ContentProvider:PreloadAsync({ s }) end)
-        if s.Parent then pcall(function() s:Play() end) end
-        task.wait(1)
-        if s and s.Parent and not s.IsPlaying then pcall(function() s:Play() end) end
-    end)
-    task.delay(15, function()
-        pcall(function()
-            if s and s.Parent then s:Stop() s:Destroy() end
-        end)
-        if _currentIntroSound == s then _currentIntroSound = nil end
-    end)
-    return s
-end
-
-getIntroAsset = function(idx)
-    return { audio = nil, video = INTRO_MUSIC_LINKS[tonumber(idx) or selectedIntroMusic or 1], path = "printed_intro_track.mp3" }
-end
-
-createIntroSound = function(idx)
-    return createIntroSound(INTRO_MUSIC_LINKS[tonumber(idx) or selectedIntroMusic or 1])
-end
-
-previewIntroMusic = function(idx)
-    task.spawn(function()
-        pcall(function()
-            stopIntroPreview()
-            createIntroSound(INTRO_MUSIC_LINKS[tonumber(idx) or selectedIntroMusic or 1])
-        end)
-    end)
-end
-
-playIntroSequence = function(cb)
-    stopIntroPlayback()
-    task.spawn(function()
-        local url = INTRO_MUSIC_LINKS[selectedIntroMusic or 1] or INTRO_MUSIC_LINKS[1]
-        pcall(function() createIntroSound(url) end)
-        local sg = Instance.new("ScreenGui")
-        sg.Name = "PrintedIntro"
-        sg.ResetOnSpawn = false
-        sg.IgnoreGuiInset = true
-        sg.DisplayOrder = 100000
-        sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        local pg = localPlayer:FindFirstChild("PlayerGui") or localPlayer:WaitForChild("PlayerGui", 5)
-        local placed = false
-        pcall(function() if gethui then sg.Parent = gethui() placed = true end end)
-        if not placed then sg.Parent = pg end
-        local start = tick()
-        local function waitTo(t)
-            local elapsed = tick() - start
-            local remaining = t - elapsed
-            if remaining > 0 then task.wait(remaining) end
-        end
-        local color = Color3.fromRGB(90, 150, 255)
-        local bg = Instance.new("Frame", sg)
-        bg.Size = UDim2.new(1, 0, 1, 0)
-        bg.BackgroundColor3 = Color3.fromRGB(6, 8, 14)
-        bg.BackgroundTransparency = 1
-        bg.BorderSizePixel = 0
-        local frame = Instance.new("Frame", sg)
-        frame.Size = UDim2.new(1, 0, 1, 0)
-        frame.BackgroundColor3 = Color3.new(0, 0, 0)
-        frame.BackgroundTransparency = 1
-        frame.ZIndex = 2
-        local line = Instance.new("Frame", sg)
-        line.AnchorPoint = Vector2.new(0.5, 0.5)
-        line.Position = UDim2.new(0.5, 0, 0.48, 0)
-        line.Size = UDim2.new(0.72, 0, 0, 2)
-        line.BackgroundColor3 = color
-        line.BackgroundTransparency = 1
-        local title = Instance.new("TextLabel", sg)
-        title.AnchorPoint = Vector2.new(0.5, 0.5)
-        title.Position = UDim2.new(0.5, 0, 0.48, 0)
-        title.Size = UDim2.new(0, 520, 0, 70)
-        title.BackgroundTransparency = 1
-        title.Text = "PRINTED"
-        title.Font = Enum.Font.GothamBlack
-        title.TextSize = 68
-        title.TextColor3 = Color3.fromRGB(245, 248, 255)
-        title.TextTransparency = 1
-        title.TextStrokeColor3 = color
-        title.TextStrokeTransparency = 1
-        local sub = Instance.new("TextLabel", sg)
-        sub.AnchorPoint = Vector2.new(0.5, 0)
-        sub.Position = UDim2.new(0.5, 0, 0.48, 48)
-        sub.Size = UDim2.new(0, 300, 0, 22)
-        sub.BackgroundTransparency = 1
-        sub.Text = "ZexHub"
-        sub.Font = Enum.Font.GothamMedium
-        sub.TextSize = 14
-        sub.TextColor3 = Color3.fromRGB(180, 190, 255)
-        sub.TextTransparency = 1
-        local blur = Instance.new("BlurEffect")
-        blur.Size = 0
-        blur.Parent = Lighting
-        TweenService:Create(blur, TweenInfo.new(0.3), { Size = 14 }):Play()
-        TweenService:Create(bg, TweenInfo.new(0.3), { BackgroundTransparency = 0.08 }):Play()
-        TweenService:Create(frame, TweenInfo.new(0.3), { BackgroundTransparency = 0.35 }):Play()
-        waitTo(0.3)
-        TweenService:Create(title, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { TextTransparency = 0, TextStrokeTransparency = 0.5 }):Play()
-        TweenService:Create(line, TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Size = UDim2.new(0, 200, 0, 2), BackgroundTransparency = 0 }):Play()
-        task.wait(0.15)
-        TweenService:Create(sub, TweenInfo.new(0.3), { TextTransparency = 0 }):Play()
-        waitTo(2.1)
-        TweenService:Create(title, TweenInfo.new(0.15), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
-        TweenService:Create(sub, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
-        TweenService:Create(line, TweenInfo.new(0.3), { BackgroundTransparency = 1, Size = UDim2.new(0, 0, 0, 2) }):Play()
-        TweenService:Create(bg, TweenInfo.new(0.35), { BackgroundTransparency = 1 }):Play()
-        TweenService:Create(frame, TweenInfo.new(0.45), { BackgroundTransparency = 1 }):Play()
-        TweenService:Create(blur, TweenInfo.new(0.4), { Size = 0 }):Play()
-        waitTo(3.5)
-        pcall(function() sg:Destroy() end)
-        pcall(function() blur:Destroy() end)
-        if cb then pcall(cb) end
-    end)
-end
-
 -- ============================================================
 -- MOBILE BUTTONS
 -- ============================================================
@@ -6786,48 +6711,18 @@ local function buildGui()
     end)
 
     -- Replay Intro
-    local riRow = createRow(40)
-    local riLabel = Instance.new("TextLabel", riRow)
-    riLabel.Size = UDim2.new(0.45, 0, 1, 0)
-    riLabel.Position = UDim2.new(0, 10, 0, 0)
-    riLabel.BackgroundTransparency = 1
-    riLabel.Text = "Replay Intro"
-    riLabel.TextColor3 = Color3.fromRGB(200, 160, 130)
-    riLabel.Font = Enum.Font.GothamBold
-    riLabel.TextSize = 13
-    riLabel.TextXAlignment = Enum.TextXAlignment.Left
-    local riBtn = Instance.new("TextButton", riRow)
-    riBtn.Size = UDim2.new(0, 100, 0, 26)
-    riBtn.Position = UDim2.new(1, -110, 0.5, -13)
-    riBtn.BackgroundColor3 = Color3.fromRGB(60, 30, 130)
-    riBtn.BorderSizePixel = 0
-    riBtn.Text = "PLAY"
-    riBtn.TextColor3 = Color3.fromRGB(200, 140, 230)
-    riBtn.Font = Enum.Font.GothamBlack
-    riBtn.TextSize = 12
-    riBtn.ZIndex = 7
-    riBtn.AutoButtonColor = false
-    Instance.new("UICorner", riBtn).CornerRadius = UDim.new(0, 8)
     riBtn.Activated:Connect(function()
-        -- Senin intro'nu çalıştır (yukarıda tanımladığımız)
-        if type(_G.ZexPlayIntro) == "function" then pcall(_G.ZexPlayIntro) end
-    end)
+        -- Menüyü gizle, intro.lua'yı tekrar çalıştır
+        if _G.__PrintedMain then _G.__PrintedMain.Visible = false end
+        if _G.__PrintedMiniBtn then _G.__PrintedMiniBtn.Visible = false end
+        if _G.__PrintedMini then _G.__PrintedMini.Visible = false end
+        if v88 then v88.Enabled = false end
 
-    -- Anti Lag
-    local alRow = createRow(32)
-    addRowLabel(alRow, "Anti Lag")
-    local alBg, alDot = createToggle(alRow)
-    applyToggleVisual(alBg, alDot, false)
-    local alClick = Instance.new("TextButton", alBg)
-    alClick.Size = UDim2.new(1, 0, 1, 0)
-    alClick.BackgroundTransparency = 1
-    alClick.Text = ""
-    alClick.ZIndex = 6
-    alClick.Activated:Connect(function()
-        antiLagEnabled = not antiLagEnabled
-        if antiLagEnabled then enableAntiLag() else disableAntiLag() end
-        applyToggleVisual(alBg, alDot, antiLagEnabled)
-        if printedMarkDirty then printedMarkDirty() end
+        task.spawn(function()
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/ty2jjr22cd-jpg/J/refs/heads/main/intro.lua"))()
+            end)
+        end)
     end)
 
     -- Stretch Rez
